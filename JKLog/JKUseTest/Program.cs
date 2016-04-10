@@ -10,9 +10,13 @@ namespace JKUseTest
     {
         static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += JKExceptionHandler.UnhandledException;
+            //   AppDomain.CurrentDomain.UnhandledException += JKExceptionHandler.UnhandledException;
+            WindowsEvent.RegisterSource();
 
-            UseTests();
+            JKLogger logger = new JKLogger();
+
+            logger.Information("Testi temppeli matikainen");
+
         }
 
 
