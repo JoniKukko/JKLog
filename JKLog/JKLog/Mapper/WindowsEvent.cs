@@ -10,7 +10,13 @@ namespace JKLog.Mapper
     public class WindowsEvent : IWritable
     {
         private static string staticSource = ConfigurationManager.GetValue(typeof(WindowsEvent), "source");
-
+        private static string StaticSource
+        {
+            get
+            {
+                return (staticSource != null) ? staticSource : "JKLog";
+            }
+        }
 
 
         public void WriteEntry(IEntry entry)
@@ -29,7 +35,7 @@ namespace JKLog.Mapper
                     if (entry.Context != null)
                         toBytes = Encoding.ASCII.GetBytes(entry.Context.ToString());
 
-                    EventLog.WriteEntry(staticSource, entry.Message, type, (int)entry.Type, (short)entry.Type, toBytes);
+                    EventLog.WriteEntry(StaticSource, entry.Message, type, (int)entry.Type, (short)entry.Type, toBytes);
                 }
                 catch (Exception)
                 {
@@ -44,13 +50,10 @@ namespace JKLog.Mapper
         {
             try
             {
-                if (staticSource == null)
-                    JKLogger.StaticFailureAudit("Failed to open Windows Event source. Configuration not found.", typeof(WindowsEvent), "JKLog");
-
-                else if (!EventLog.SourceExists(staticSource))
+                if (!EventLog.SourceExists(StaticSource))
                 {
-                    EventLog.CreateEventSource(staticSource, staticSource);
-                    JKLogger.StaticSuccessAudit("Windows Event source is created. Restart the application to allow it to be registered.", typeof(WindowsEvent), "JKLog");
+                    EventLog.CreateEventSource(StaticSource, StaticSource);
+                    JKLogger.StaticSuccessAudit("Windows Event source \"" + StaticSource + "\" is created. Restart the application to allow it to be registered.", typeof(WindowsEvent), "JKLog");
                     return;
                 }
             }

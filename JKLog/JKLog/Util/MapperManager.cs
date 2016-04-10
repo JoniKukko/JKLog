@@ -11,6 +11,7 @@ namespace JKLog.Util
     internal static class MapperManager
     {
         private static List<IWritable> defaultWritables = null;
+        private static List<IReadable> defaultReadables = null;
         private static List<IDisposable> defaultDisposables = null;
 
 
@@ -21,7 +22,7 @@ namespace JKLog.Util
         /// Returns list of writable mappers parsed from app.config. If there is none then JKConsole is used by default.
         /// </summary>
         /// <returns>List of writable mappers.</returns>
-        public static List<IWritable> GetDefaultMappers()
+        public static List<IWritable> GetDefaultWritables()
         {
             // if null, then parse default mappers from app.config
             if (defaultWritables == null)
@@ -32,6 +33,20 @@ namespace JKLog.Util
                 defaultWritables.Add(new JKConsole());
 
             return defaultWritables;
+        }
+
+
+
+        public static IReadable GetDefaultReadable(Type defaultMapperType)
+        {
+            if (defaultReadables == null)
+                CreateDefaultMappers();
+
+            foreach (IReadable readable in defaultReadables)
+                if (defaultMapperType == readable.GetType())
+                    return readable;
+
+            return null;
         }
 
 
@@ -49,15 +64,16 @@ namespace JKLog.Util
 
 
         /// <summary>
-        /// Turns mapper names from ConfigurationMapper to list of defaultWritables and defaultDisposables.
+        /// Turns mapper names from ConfigurationMapper to list of defaultWritables, defaultReadables and defaultDisposables.
         /// </summary>
         private static void CreateDefaultMappers()
         {
             defaultWritables = new List<IWritable>();
+            defaultReadables = new List<IReadable>();
             defaultDisposables = new List<IDisposable>();
 
 
-            foreach (string mapperName in ConfigurationManager.GetMapperNames())
+            foreach (string mapperName in ConfigurationManager.GetRegisteredMapperNames())
             {
                 // sallii käytön myös muista namespacesta
                 Type mapperType = Type.GetType(mapperName);
@@ -74,6 +90,10 @@ namespace JKLog.Util
                     IWritable writableInstance = instance as IWritable;
                     if (writableInstance != null)
                         defaultWritables.Add(writableInstance);
+
+                    IReadable readableInstance = instance as IReadable;
+                    if (readableInstance != null)
+                        defaultReadables.Add(readableInstance);
 
                     IDisposable disposableInstance = instance as IDisposable;
                     if (disposableInstance != null)

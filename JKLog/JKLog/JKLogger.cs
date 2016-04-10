@@ -23,7 +23,7 @@ namespace JKLog
         #region Constructors
 
         /// <summary>
-        /// Initialize a new instance.
+        /// Initialize a new instance with default mappers.
         /// </summary>
         public JKLogger()
         {

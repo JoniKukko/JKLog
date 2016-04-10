@@ -11,7 +11,7 @@ namespace JKLog.Configuration
 
 
 
-        public static List<string> GetMapperNames()
+        public static List<string> GetRegisteredMapperNames()
         {
             List<string> names = new List<string>();
 

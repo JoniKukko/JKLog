@@ -32,7 +32,7 @@ namespace JKLog
         public JKWriter(Boolean loadDefaultMappers)
         {
             if (loadDefaultMappers)
-                this.mappers = MapperManager.GetDefaultMappers();
+                this.mappers = MapperManager.GetDefaultWritables();
             else
                 this.mappers = new List<IWritable>();
         }
