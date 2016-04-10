@@ -47,10 +47,7 @@ namespace JKLog.Mapper
                 if (staticSource == null)
                     JKLogger.StaticFailureAudit("Failed to open Windows Event source. Configuration not found.", typeof(WindowsEvent), "JKLog");
 
-                else if (EventLog.SourceExists(staticSource))
-                    JKLogger.StaticInformation("Windows Event source is already registered.", null, "JKLog");
-
-                else
+                else if (!EventLog.SourceExists(staticSource))
                 {
                     EventLog.CreateEventSource(staticSource, staticSource);
                     JKLogger.StaticSuccessAudit("Windows Event source is created. Restart the application to allow it to be registered.", typeof(WindowsEvent), "JKLog");
