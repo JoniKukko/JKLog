@@ -1,51 +1,51 @@
 ﻿using JKLog.Interface;
-using System.Collections.Generic;
+using JKLog.Util;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+
+
 
 namespace JKLog
 {
-    class JKReader : IReadable
+    public class JKReader : IEnumerable<IEntry>, IDisposable
     {
-        private IReadable reader;
+        private IReadable mapper;
 
-        public IEntry Peek()
+
+
+        public JKReader(IReadable mapper)
         {
-            throw new NotImplementedException();
+            this.mapper = mapper;
         }
 
-        public IEntry PeekAt(int id)
+
+
+        #region IEnumerable
+
+        public IEnumerator<IEntry> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return mapper.Entries;
         }
 
-        public List<IEntry> ReadAll()
+
+
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return this.GetEnumerator();
         }
 
-        public IEntry ReadAt(int id)
+        #endregion
+
+
+
+        #region IDisposable
+
+        public void Dispose()
         {
-            throw new NotImplementedException();
+            MapperManager.DisposeMapper(this.mapper);
         }
 
-        public IEntry ReadNext()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEntry ReadPrevious()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<IEntry> ReadToEnd()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<IEntry> ReadToStart()
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 }

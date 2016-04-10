@@ -1,9 +1,7 @@
 ﻿using JKLog.Interface;
 using System.Collections.Generic;
-using System.Linq;
-using System;
-using System.Collections;
-using System.Linq.Expressions;
+
+
 
 namespace JKLog.Mapper
 {
@@ -11,45 +9,15 @@ namespace JKLog.Mapper
     {
         private List<IEntry> entries = new List<IEntry>();
 
-        public IEntry Peek()
+        public IEnumerator<IEntry> Entries
         {
-            throw new NotImplementedException();
+            get
+            {
+                return this.entries.GetEnumerator();
+            }
         }
 
-        public IEntry PeekAt(int id)
-        {
-            throw new NotImplementedException();
-        }
 
-        public List<IEntry> ReadAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEntry ReadAt(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEntry ReadNext()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEntry ReadPrevious()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<IEntry> ReadToEnd()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<IEntry> ReadToStart()
-        {
-            throw new NotImplementedException();
-        }
 
         public void WriteEntry(IEntry entry)
         {
