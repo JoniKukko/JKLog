@@ -7,15 +7,15 @@ using System.IO;
 
 namespace JKLog.Mapper
 {
-    class TextFile : IWritable
+    class LogFile : IWritable
     {
-        private static string staticPath = ConfigurationManager.GetValue(typeof(TextFile), "path");
-        private static string staticFormatPath = ConfigurationManager.GetValue(typeof(TextFile), "formatPath");
+        private static string staticPath = ConfigurationManager.GetValue(typeof(LogFile), "path");
+        private static string staticFormatPath = ConfigurationManager.GetValue(typeof(LogFile), "formatPath");
 
-        private static string staticFilename = ConfigurationManager.GetValue(typeof(TextFile), "filename");
-        private static string staticFormatFilename = ConfigurationManager.GetValue(typeof(TextFile), "formatFilename");
+        private static string staticFilename = ConfigurationManager.GetValue(typeof(LogFile), "filename");
+        private static string staticFormatFilename = ConfigurationManager.GetValue(typeof(LogFile), "formatFilename");
 
-        private static string staticExtension = ConfigurationManager.GetValue(typeof(TextFile), "extension");
+        private static string staticExtension = ConfigurationManager.GetValue(typeof(LogFile), "extension");
         
         private string FullPath
         {

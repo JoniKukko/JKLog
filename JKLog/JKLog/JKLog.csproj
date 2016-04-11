@@ -52,7 +52,7 @@
     <Compile Include="JKLogger.cs" />
     <Compile Include="JKReader.cs" />
     <Compile Include="JKWriter.cs" />
-    <Compile Include="Mapper\TextFile.cs" />
+    <Compile Include="Mapper\LogFile.cs" />
     <Compile Include="Mapper\JKConsole.cs" />
     <Compile Include="Mapper\Managed.cs" />
     <Compile Include="Mapper\WindowsEvent.cs" />
