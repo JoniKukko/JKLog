@@ -1,4 +1,5 @@
 ﻿using JKLog;
+using JKLog.Configuration;
 using JKLog.Interface;
 using JKLog.Mapper;
 using JKLog.Model;
@@ -11,8 +12,12 @@ namespace JKUseTest
         static void Main(string[] args)
         {
             //   AppDomain.CurrentDomain.UnhandledException += JKExceptionHandler.UnhandledException;
-            WindowsEvent.RegisterSource();
+            WindowsEvent events = MapperManager.GetDefaultMapper(typeof(WindowsEvent)) as WindowsEvent;
+            if (events != null)
+                events.RegisterSource();
 
+
+            UseTests();
 
         }
 

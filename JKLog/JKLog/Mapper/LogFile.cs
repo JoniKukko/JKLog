@@ -1,42 +1,63 @@
-﻿using JKLog.Configuration;
-using JKLog.Interface;
+﻿using JKLog.Interface;
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 
 
 namespace JKLog.Mapper
 {
-    class LogFile : IWritable
+    class LogFile : IWritable, IConfigurable
     {
-        private static string staticPath = ConfigurationManager.GetValue(typeof(LogFile), "path");
-        private static string staticFormatPath = ConfigurationManager.GetValue(typeof(LogFile), "formatPath");
-
-        private static string staticFilename = ConfigurationManager.GetValue(typeof(LogFile), "filename");
-        private static string staticFormatFilename = ConfigurationManager.GetValue(typeof(LogFile), "formatFilename");
-
-        private static string staticExtension = ConfigurationManager.GetValue(typeof(LogFile), "extension");
+        private Dictionary<string, string> configuration;
+        public Dictionary<string, string> Configuration
+        {
+            set
+            {
+                if (this.configuration == null)
+                    this.configuration = value;
+            }
+            private get
+            {
+                if (this.configuration == null)
+                    this.configuration = new Dictionary<string, string>();
+                return this.configuration;
+            }
+        }
         
+
+
+        private string fullPath;
         private string FullPath
         {
             get
             {
-                string path = "JKLog";
-                string filename = "JKLog";
-                string extension = (staticExtension != null) ? staticExtension : "log";
-                DateTime now = DateTime.Now;
+                if (this.fullPath == null)
+                {
+                    string path, filename, extension;
 
-                if (staticPath != null)
-                    path = staticPath;
-                else if (staticFormatPath != null)
-                    path = now.ToString(staticFormatPath);
+                    // jos pathiä ei löydy, mutta formatPath löytyy
+                    if (!this.Configuration.TryGetValue("path", out path) 
+                        || this.Configuration.TryGetValue("formatPath", out path))
+                        path = DateTime.Now.ToString(path);
+                    
+                    // jos filenameä ei löydy, mutta formatFilename löytyy
+                    if (!this.Configuration.TryGetValue("filename", out filename)
+                        || this.Configuration.TryGetValue("formatFilename", out filename))
+                        filename = DateTime.Now.ToString(filename);
 
-                if (staticFilename != null)
-                    filename = staticFilename;
-                else if (staticFormatFilename != null)
-                    filename = now.ToString(staticFormatFilename);
+                    // haetaan extension
+                    this.Configuration.TryGetValue("extension", out extension);
 
-                return Path.ChangeExtension(Path.Combine(path, filename), extension);
+                    // defaultit
+                    if (path == null) path = "JKLog";
+                    if (filename == null) filename = "JKLog";
+                    if (extension == null) extension = "log";
+
+                    this.fullPath = Path.ChangeExtension(Path.Combine(path, filename), extension);
+                }
+
+                return this.fullPath;
             }
         }
 
@@ -44,13 +65,12 @@ namespace JKLog.Mapper
 
         public void WriteEntry(IEntry entry)
         {
-            string fullPath = FullPath;
-            string dir = Path.GetDirectoryName(fullPath);
+            string dir = Path.GetDirectoryName(FullPath);
 
-            if (!String.IsNullOrWhiteSpace(dir))
+            if (!string.IsNullOrWhiteSpace(dir))
                 Directory.CreateDirectory(dir);
             
-            using (StreamWriter file = new StreamWriter(fullPath, true))
+            using (StreamWriter file = new StreamWriter(FullPath, true))
             {
                 file.WriteLine(string.Format(
                 "{0} {1} {2}: {3} {4} in {5}:{6}:{7}",

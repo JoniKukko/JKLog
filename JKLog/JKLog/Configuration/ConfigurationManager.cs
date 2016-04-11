@@ -9,29 +9,40 @@ namespace JKLog.Configuration
     {
         private static JKLogSection section = (JKLogSection)System.Configuration.ConfigurationManager.GetSection("JKLog");
 
-
-
-        public static List<string> GetRegisteredMapperNames()
+        private static List<string> mapperNames = null;
+        public static List<string> MapperNames
         {
-            List<string> names = new List<string>();
+            get
+            {
+                if (mapperNames == null)
+                {
+                    mapperNames = new List<string>();
+                    foreach (MapperElement mapper in section.Mappers)
+                        mapperNames.Add(mapper.Name);
+                }
 
-            foreach (MapperElement mapper in section.Mappers)
-                names.Add(mapper.Name);
-
-            return names;
+                return mapperNames;
+            }
         }
 
 
 
-        public static string GetValue(Type mapperType, string key)
+        public static Dictionary<string, string> GetConfiguration(Type mapperType)
         {
-            foreach (MapperElement mapper in section.Mappers)
-                if (mapper.Name == mapperType.Name)
-                    foreach (KeyValue pair in mapper.Elements)
-                        if (pair.Key == key)
-                            return pair.Value;
+            Dictionary<string, string> configuration = new Dictionary<string, string>();
 
-            return null;
+            foreach (MapperElement mapper in section.Mappers)
+            {
+                if (mapper.Name == mapperType.Name)
+                {
+                    foreach (KeyValue pair in mapper.Elements)
+                        configuration.Add(pair.Key, pair.Value);
+
+                    break;
+                }
+            }
+
+            return configuration;
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using JKLog.Interface;
-using JKLog.Util;
+﻿using JKLog.Configuration;
+using JKLog.Interface;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,6 +41,9 @@ namespace JKLog
 
         #region IDisposable
 
+        /// <summary>
+        /// Disposes mapper safely.
+        /// </summary>
         public void Dispose()
         {
             MapperManager.DisposeMapper(this.mapper);

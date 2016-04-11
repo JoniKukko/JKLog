@@ -1,6 +1,7 @@
-﻿using JKLog.Interface;
+﻿using JKLog.Configuration;
+using JKLog.Interface;
 using JKLog.Model;
-using JKLog.Util;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 
@@ -13,15 +14,25 @@ namespace JKLog
     /// </summary>
     public static class JKLogger
     {
-        private static JKWriter writer = null;
+        private static JKWriter writer;
         private static JKWriter Writer
         {
             get
             {
-                if (JKLogger.writer == null)
-                    JKLogger.writer = new JKWriter(MapperManager.DefaultWritables);
+                if (writer == null)
+                {
+                    List<IWritable> defaultWritables = new List<IWritable>();  
+                    foreach (object defaultMapper in MapperManager.DefaultMappers)
+                    {
+                        IWritable writable = defaultMapper as IWritable;
+                        if (writable != null)
+                            defaultWritables.Add(writable);
+                    }
+
+                    writer = new JKWriter(defaultWritables);
+                }
                 
-                return JKLogger.writer;
+                return writer;
             }
         }
 

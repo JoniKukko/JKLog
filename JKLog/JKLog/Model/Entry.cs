@@ -1,5 +1,4 @@
 ﻿using JKLog.Interface;
-using JKLog.Util;
 using System;
 using System.Runtime.CompilerServices;
 

@@ -4,20 +4,41 @@ using System.Diagnostics;
 using JKLog.Configuration;
 using System.Text;
 using JKLog.Model;
+using System.Collections.Generic;
 
 namespace JKLog.Mapper
 {
-    public class WindowsEvent : IWritable
+    public class WindowsEvent : IWritable, IConfigurable
     {
-        private static string staticSource = ConfigurationManager.GetValue(typeof(WindowsEvent), "source");
-        private static string StaticSource
+        private Dictionary<string, string> configuration;
+        public Dictionary<string, string> Configuration
         {
-            get
+            set
             {
-                return (staticSource != null) ? staticSource : "JKLog";
+                if (this.configuration == null)
+                    this.configuration = value;
+            }
+            private get
+            {
+                if (this.configuration == null)
+                    this.configuration = new Dictionary<string, string>();
+                return this.configuration;
             }
         }
 
+
+        private string source;
+        private string Source
+        {
+            get
+            {
+                if (this.source == null)
+                    if (!this.Configuration.TryGetValue("source", out this.source))
+                        this.source = "JKLog";
+
+                return this.source;
+            }
+        }
 
         public void WriteEntry(IEntry entry)
         {
@@ -35,7 +56,7 @@ namespace JKLog.Mapper
                     if (entry.Context != null)
                         toBytes = Encoding.ASCII.GetBytes(entry.Context.ToString());
 
-                    EventLog.WriteEntry(StaticSource, entry.Message, type, (int)entry.Type, (short)entry.Type, toBytes);
+                    EventLog.WriteEntry(this.Source, entry.Message, type, (int)entry.Type, (short)entry.Type, toBytes);
                 }
                 catch (Exception)
                 {
@@ -46,14 +67,14 @@ namespace JKLog.Mapper
 
 
 
-        public static void RegisterSource()
+        public void RegisterSource()
         {
             try
             {
-                if (!EventLog.SourceExists(StaticSource))
+                if (!EventLog.SourceExists(this.Source))
                 {
-                    EventLog.CreateEventSource(StaticSource, StaticSource);
-                    JKLogger.SuccessAudit("Windows Event source \"" + StaticSource + "\" is created. Restart the application to allow it to be registered.", typeof(WindowsEvent), "JKLog");
+                    EventLog.CreateEventSource(this.Source, this.Source);
+                    JKLogger.SuccessAudit("Windows Event source \"" + this.Source + "\" is created. Restart the application to allow it to be registered.", typeof(WindowsEvent), "JKLog");
                     return;
                 }
             }

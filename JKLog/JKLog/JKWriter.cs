@@ -1,5 +1,5 @@
-﻿using JKLog.Interface;
-using JKLog.Util;
+﻿using JKLog.Configuration;
+using JKLog.Interface;
 using System;
 using System.Collections.Generic;
 
