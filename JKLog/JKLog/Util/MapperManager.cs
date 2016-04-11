@@ -12,11 +12,10 @@ namespace JKLog.Util
     {
         private static List<IWritable> defaultWritables = null;
         private static List<IReadable> defaultReadables = null;
-        private static List<IDisposable> defaultDisposables = null;
 
 
 
-        #region Create and Dispose default mappers.
+        #region Creates default mappers.
 
         /// <summary>
         /// Returns list of writable mappers parsed from app.config. If there is none then JKConsole is used by default.
@@ -48,29 +47,15 @@ namespace JKLog.Util
 
             return null;
         }
-
-
-
-        /// <summary>
-        /// Disposes all instances of default mappers.
-        /// </summary>
-        public static void DisposeDefaultMappers()
-        {
-            // if null, then there is no default mappers used at all
-            if (defaultDisposables != null)
-                defaultDisposables.ForEach(item => item.Dispose());
-        }
-
-
+        
 
         /// <summary>
-        /// Turns mapper names from ConfigurationMapper to list of defaultWritables, defaultReadables and defaultDisposables.
+        /// Turns mapper names from ConfigurationMapper to list of defaultWritables and defaultReadables
         /// </summary>
         private static void CreateDefaultMappers()
         {
             defaultWritables = new List<IWritable>();
             defaultReadables = new List<IReadable>();
-            defaultDisposables = new List<IDisposable>();
 
 
             foreach (string mapperName in ConfigurationManager.GetRegisteredMapperNames())
@@ -90,14 +75,6 @@ namespace JKLog.Util
                     IWritable writableInstance = instance as IWritable;
                     if (writableInstance != null)
                         defaultWritables.Add(writableInstance);
-
-                    IReadable readableInstance = instance as IReadable;
-                    if (readableInstance != null)
-                        defaultReadables.Add(readableInstance);
-
-                    IDisposable disposableInstance = instance as IDisposable;
-                    if (disposableInstance != null)
-                        defaultDisposables.Add(disposableInstance);
                 }
             }
         }
@@ -106,90 +83,11 @@ namespace JKLog.Util
 
 
 
-        #region DisposeMappers overloads
-
-        /// <summary>
-        /// Disposes all disposable mappers from list of writables.
-        /// </summary>
-        /// <param name="mappers">List of writable mappers.</param>
-        public static void DisposeMappers(List<IWritable> mappers)
+        public static void ClearMappers()
         {
-            foreach (IWritable mapper in mappers)
-            {
-                IDisposable disposable = mapper as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
-            }
+            MapperManager.defaultWritables = null;
+            MapperManager.defaultReadables = null;
         }
-
-
-
-        /// <summary>
-        /// Disposes all disposable mappers from list of readables.
-        /// </summary>
-        /// <param name="mappers">List of readable mappers.</param>
-        public static void DisposeMappers(List<IReadable> mappers)
-        {
-            foreach (IReadable mapper in mappers)
-            {
-                IDisposable disposable = mapper as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
-            }
-        }
-
-
-
-        /// <summary>
-        /// Disposes all from list of disposables.
-        /// </summary>
-        /// <param name="mappers">List of disposable mappers.</param>
-        public static void DisposeMappers(List<IDisposable> mappers)
-        {
-            mappers.ForEach(mapper => mapper.Dispose());
-        }
-
-        #endregion
-
-
-
-        #region DisposeMapper overloads
-
-        /// <summary>
-        /// Disposes writable mapper if possible.
-        /// </summary>
-        /// <param name="mapper">Writable mapper.</param>
-        public static void DisposeMapper(IWritable mapper)
-        {
-            IDisposable disposable = mapper as IDisposable;
-            if (disposable != null)
-                disposable.Dispose();
-        }
-
-
-
-        /// <summary>
-        /// Disposes readable mapper if possible.
-        /// </summary>
-        /// <param name="mapper">Readable mapper.</param>
-        public static void DisposeMapper(IReadable mapper)
-        {
-            IDisposable disposable = mapper as IDisposable;
-            if (disposable != null)
-                disposable.Dispose();
-        }
-
-
-
-        /// <summary>
-        /// Disposes a disposable mapper.
-        /// </summary>
-        /// <param name="mapper">Disposable mapper</param>
-        public static void DisposeMapper(IDisposable mapper)
-        {
-            mapper.Dispose();
-        }
-
-        #endregion
+        
     }
 }

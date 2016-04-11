@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace JKLog
 {
-    public class JKWriter : IWritable, IDisposable
+    public class JKWriter : IDisposable
     {
         private List<IWritable> mappers;
 
@@ -21,20 +21,6 @@ namespace JKLog
         public JKWriter()
         {
             this.mappers = new List<IWritable>();
-        }
-
-
-
-        /// <summary>
-        /// Initializes writer instance with or without default IWritables.
-        /// </summary>
-        /// <param name="loadDefaultMappers">Decides if default IWritables are loaded or not.</param>
-        public JKWriter(Boolean loadDefaultMappers)
-        {
-            if (loadDefaultMappers)
-                this.mappers = MapperManager.GetDefaultWritables();
-            else
-                this.mappers = new List<IWritable>();
         }
 
 
@@ -93,7 +79,7 @@ namespace JKLog
 
 
 
-        #region IWritable
+        #region WriteEntry
 
         /// <summary>
         /// Writes a new entry to all attached IWritables.
@@ -101,7 +87,7 @@ namespace JKLog
         /// <param name="entry">New IEntry to write.</param>
         public void WriteEntry(IEntry entry)
         {
-            this.mappers.ForEach(item => item.WriteEntry(entry));
+            this.mappers.ForEach(mapper => mapper.WriteEntry(entry));
         }
 
         #endregion
@@ -110,9 +96,19 @@ namespace JKLog
 
         #region IDisposable
 
+        /// <summary>
+        /// Disposes disposable mappers safely.
+        /// </summary>
         public void Dispose()
         {
-            MapperManager.DisposeMappers(this.mappers);
+            foreach (IWritable mapper in this.mappers)
+            {
+                IDisposable disposable = mapper as IDisposable;
+                if (disposable != null)
+                    disposable.Dispose();
+            }
+
+            this.mappers = null;
         }
 
         #endregion

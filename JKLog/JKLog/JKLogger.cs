@@ -13,9 +13,19 @@ namespace JKLog
     /// </summary>
     public static class JKLogger
     {
-        private static IWritable writer = new JKWriter(true);
+        private static JKWriter writer = null;
+        private static JKWriter Writer
+        {
+            get
+            {
+                if (JKLogger.writer == null)
+                    JKLogger.writer = new JKWriter(MapperManager.GetDefaultWritables());
+                
+                return JKLogger.writer;
+            }
+        }
 
-        
+
 
         #region Error
 
@@ -30,7 +40,7 @@ namespace JKLog
         /// <param name="lineNumber">This is an automatic [CallerLineNumber] parameter.</param>
         public static void Error(string message, object context = null, string category = null, [CallerMemberName] string caller = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
         {
-            JKLogger.writer.WriteEntry( new Entry(EntryType.Error, message, context, category, caller, filePath, lineNumber) );
+            JKLogger.Writer.WriteEntry( new Entry(EntryType.Error, message, context, category, caller, filePath, lineNumber) );
         }
 
         #endregion
@@ -50,7 +60,7 @@ namespace JKLog
         /// <param name="lineNumber">This is an automatic [CallerLineNumber] parameter.</param>
         public static void Warning(string message, object context = null, string category = null, [CallerMemberName] string caller = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
         {
-            JKLogger.writer.WriteEntry( new Entry(EntryType.Warning, message, context, category, caller, filePath, lineNumber) );
+            JKLogger.Writer.WriteEntry( new Entry(EntryType.Warning, message, context, category, caller, filePath, lineNumber) );
         }
 
         #endregion
@@ -70,7 +80,7 @@ namespace JKLog
         /// <param name="lineNumber">This is an automatic [CallerLineNumber] parameter.</param>
         public static void Information(string message, object context = null, string category = null, [CallerMemberName] string caller = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
         {
-            JKLogger.writer.WriteEntry( new Entry(EntryType.Information, message, context, category, caller, filePath, lineNumber) );
+            JKLogger.Writer.WriteEntry( new Entry(EntryType.Information, message, context, category, caller, filePath, lineNumber) );
         }
 
         #endregion
@@ -90,7 +100,7 @@ namespace JKLog
         /// <param name="lineNumber">This is an automatic [CallerLineNumber] parameter.</param>
         public static void SuccessAudit(string message, object context = null, string category = null, [CallerMemberName] string caller = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
         {
-            JKLogger.writer.WriteEntry( new Entry(EntryType.SuccessAudit, message, context, category, caller, filePath, lineNumber) );
+            JKLogger.Writer.WriteEntry( new Entry(EntryType.SuccessAudit, message, context, category, caller, filePath, lineNumber) );
         }
 
         #endregion
@@ -110,7 +120,7 @@ namespace JKLog
         /// <param name="lineNumber">This is an automatic [CallerLineNumber] parameter.</param>
         public static void FailureAudit(string message, object context = null, string category = null, [CallerMemberName] string caller = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
         {
-            JKLogger.writer.WriteEntry( new Entry(EntryType.FailureAudit, message, context, category, caller, filePath, lineNumber) );
+            JKLogger.Writer.WriteEntry( new Entry(EntryType.FailureAudit, message, context, category, caller, filePath, lineNumber) );
         }
 
         #endregion
@@ -130,7 +140,7 @@ namespace JKLog
         /// <param name="lineNumber">This is an automatic [CallerLineNumber] parameter.</param>
         public static void Debug(string message, object context = null, string category = null, [CallerMemberName] string caller = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
         {
-            JKLogger.writer.WriteEntry( new Entry(EntryType.Debug, message, context, category, caller, filePath, lineNumber) );
+            JKLogger.Writer.WriteEntry( new Entry(EntryType.Debug, message, context, category, caller, filePath, lineNumber) );
         }
 
         #endregion
@@ -144,7 +154,9 @@ namespace JKLog
         /// </summary>
         public static void Dispose()
         {
-            MapperManager.DisposeDefaultMappers();
+            JKLogger.Writer.Dispose();
+            MapperManager.ClearMappers();
+            JKLogger.writer = null;
         }
 
         #endregion
