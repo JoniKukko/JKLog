@@ -13,9 +13,6 @@ namespace JKUseTest
             //   AppDomain.CurrentDomain.UnhandledException += JKExceptionHandler.UnhandledException;
             WindowsEvent.RegisterSource();
 
-            JKLogger logger = new JKLogger();
-
-            logger.Information("Testi temppeli matikainen");
 
         }
 
@@ -25,52 +22,26 @@ namespace JKUseTest
 
 
             Console.WriteLine("*** SIMPLE STATIC TESTS ***");
-
-            JKLogger.StaticError("This is Error");
-            JKLogger.StaticWarning("This is Warning");
-            JKLogger.StaticInformation("This is Information");
-            JKLogger.StaticSuccessAudit("This is SuccessAudit");
-            JKLogger.StaticFailureAudit("This is FailureAudit");
-            JKLogger.StaticDebug("This is Debug");
-
-
-            Console.WriteLine("*** SIMPLE INSTANCE TESTS ***");
-
-            JKLogger logger = new JKLogger();
-
-            logger.Error("This is Error");
-            logger.Warning("This is Warning");
-            logger.Information("This is Information");
-            logger.SuccessAudit("This is SuccessAudit");
-            logger.FailureAudit("This is FailureAudit");
-            logger.Debug("This is Debug");
+            
+            JKLogger.Error("This is Error");
+            JKLogger.Warning("This is Warning");
+            JKLogger.Information("This is Information");
+            JKLogger.SuccessAudit("This is SuccessAudit");
+            JKLogger.FailureAudit("This is FailureAudit");
+            JKLogger.Debug("This is Debug");
 
 
 
             Console.WriteLine("*** ADVANCED STATIC TESTS ***");
 
-            User StaticTestContext = new User("StaticTestName", 99);
+            User testContext = new User("StaticTestName", 99);
 
-            JKLogger.StaticError("This is Error", StaticTestContext, "StaticTestCategory");
-            JKLogger.StaticWarning("This is Warning", StaticTestContext, "StaticTestCategory");
-            JKLogger.StaticInformation("This is Information", StaticTestContext, "StaticTestCategory");
-            JKLogger.StaticSuccessAudit("This is SuccessAudit", StaticTestContext, "StaticTestCategory");
-            JKLogger.StaticFailureAudit("This is FailureAudit", StaticTestContext, "StaticTestCategory");
-            JKLogger.StaticDebug("This is Debug", StaticTestContext, "StaticTestCategory");
-
-
-
-            Console.WriteLine("*** ADVANCED INSTANCE TESTS ***");
-
-            User InstanceTestContext = new User("InstanceTestName", 99);
-            JKLogger logger2 = new JKLogger("InstanceTestCategory");
-
-            logger2.Error("This is Error", InstanceTestContext);
-            logger2.Warning("This is Warning", InstanceTestContext);
-            logger2.Information("This is Information", InstanceTestContext);
-            logger2.SuccessAudit("This is SuccessAudit", InstanceTestContext);
-            logger2.FailureAudit("This is FailureAudit", InstanceTestContext);
-            logger2.Debug("This is Debug", InstanceTestContext);
+            JKLogger.Error("This is Error", testContext, "TestCategory");
+            JKLogger.Warning("This is Warning", testContext, "TestCategory");
+            JKLogger.Information("This is Information", testContext, "TestCategory");
+            JKLogger.SuccessAudit("This is SuccessAudit", testContext, "TestCategory");
+            JKLogger.FailureAudit("This is FailureAudit", testContext, "TestCategory");
+            JKLogger.Debug("This is Debug", testContext, "TestCategory");
 
 
 

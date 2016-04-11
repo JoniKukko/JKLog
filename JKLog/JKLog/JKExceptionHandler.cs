@@ -31,7 +31,7 @@ namespace JKLog
         {
             Exception ex = args.Exception as Exception;
             if (ex != null)
-                JKLogger.StaticError(ex.Message, null, ex.GetType().Name);
+                JKLogger.Error(ex.Message, null, ex.GetType().Name);
         }
 
 
@@ -40,7 +40,7 @@ namespace JKLog
         {
             Exception ex = args.ExceptionObject as Exception;
             if (ex != null)
-                JKLogger.StaticError(ex.Message, null, ex.GetType().Name);
+                JKLogger.Error(ex.Message, null, ex.GetType().Name);
         }
     }
 }

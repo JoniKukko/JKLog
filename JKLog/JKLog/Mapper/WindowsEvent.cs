@@ -39,7 +39,7 @@ namespace JKLog.Mapper
                 }
                 catch (Exception)
                 {
-                    JKLogger.StaticFailureAudit("Failed to open Windows Event source. Source is not registered, configured or there is an internal failure in WindowsEvent mapper.", typeof(WindowsEvent), "JKLog");
+                    JKLogger.FailureAudit("Failed to open Windows Event source. Source is not registered, configured or there is an internal failure in WindowsEvent mapper.", typeof(WindowsEvent), "JKLog");
                 }
             }
         }
@@ -53,13 +53,13 @@ namespace JKLog.Mapper
                 if (!EventLog.SourceExists(StaticSource))
                 {
                     EventLog.CreateEventSource(StaticSource, StaticSource);
-                    JKLogger.StaticSuccessAudit("Windows Event source \"" + StaticSource + "\" is created. Restart the application to allow it to be registered.", typeof(WindowsEvent), "JKLog");
+                    JKLogger.SuccessAudit("Windows Event source \"" + StaticSource + "\" is created. Restart the application to allow it to be registered.", typeof(WindowsEvent), "JKLog");
                     return;
                 }
             }
             catch (Exception)
             {
-                JKLogger.StaticFailureAudit("Failed to create Windows Event source. Call RegisterSource() while running as Administrator.", typeof(WindowsEvent), "JKLog");
+                JKLogger.FailureAudit("Failed to create Windows Event source. Call RegisterSource() while running as Administrator.", typeof(WindowsEvent), "JKLog");
             }
         }
     }
