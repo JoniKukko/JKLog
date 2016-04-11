@@ -10,84 +10,136 @@ namespace JKLog.Util
 {
     internal static class MapperManager
     {
-        private static List<IWritable> defaultWritables = null;
-        private static List<IReadable> defaultReadables = null;
-
-
-
-        #region Creates default mappers.
-
-        /// <summary>
-        /// Returns list of writable mappers parsed from app.config. If there is none then JKConsole is used by default.
-        /// </summary>
-        /// <returns>List of writable mappers.</returns>
-        public static List<IWritable> GetDefaultWritables()
+        private static List<object> defaultMappers = null;
+        private static List<object> DefaultMappers
         {
-            // if null, then parse default mappers from app.config
-            if (defaultWritables == null)
-                CreateDefaultMappers();
+            get
+            {
+                if (defaultMappers == null)
+                {
+                    defaultMappers = new List<object>();
 
-            // if there is none then add default JKConsole mapper.
-            if (defaultWritables.Count == 0)
-                defaultWritables.Add(new JKConsole());
+                    foreach (string mapperName in ConfigurationManager.GetRegisteredMapperNames())
+                    {
+                        // sallii käytön myös muista namespacesta
+                        Type mapperType = Type.GetType(mapperName);
 
-            return defaultWritables;
+                        // jos mapperia ei löydy niin etsitään sitä omasta namespacesta
+                        if (mapperType == null)
+                            mapperType = Type.GetType("JKLog.Mapper." + mapperName);
+
+                        // jos mapperi löytyi niin lisätään se defaultteihin.
+                        if (mapperType != null)
+                            defaultMappers.Add(Activator.CreateInstance(mapperType));
+                    }
+                }
+
+                return defaultMappers;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    DefaultWritables = null;
+                    DefaultReadables = null;
+                }
+
+                defaultMappers = value;
+            }
         }
 
 
-
-        public static IReadable GetDefaultReadable(Type defaultMapperType)
+        private static List<IWritable> defaultWritables = null;
+        public static List<IWritable> DefaultWritables
         {
-            if (defaultReadables == null)
-                CreateDefaultMappers();
+            get
+            {
+                if (defaultWritables == null)
+                {
+                    defaultWritables = new List<IWritable>();
 
-            foreach (IReadable readable in defaultReadables)
-                if (defaultMapperType == readable.GetType())
-                    return readable;
+                    foreach (object mapper in DefaultMappers)
+                    {
+                        IWritable writableMapper = mapper as IWritable;
+                        if (writableMapper != null)
+                            defaultWritables.Add(writableMapper);
+                    }
+
+                    if (defaultWritables.Count == 0)
+                        defaultWritables.Add(new JKConsole());
+                }
+
+                return defaultWritables;
+            }
+
+            private set
+            {
+                defaultWritables = value;
+            }
+        }
+
+
+        private static List<IReadable> defaultReadables = null;
+        public static List<IReadable> DefaultReadables
+        {
+            get
+            {
+                if (defaultReadables == null)
+                {
+                    defaultReadables = new List<IReadable>();
+
+                    foreach (object mapper in DefaultMappers)
+                    {
+                        IReadable readableMapper = mapper as IReadable;
+                        if (readableMapper != null)
+                            defaultReadables.Add(readableMapper);
+                    }
+                }
+
+                return defaultReadables;
+            }
+
+            private set
+            {
+                defaultReadables = value;
+            }
+        }
+
+
+        
+        public static IWritable GetDefaultWritable(Type defaultMapperType)
+        {
+            foreach (IWritable writable in DefaultWritables)
+                if (defaultMapperType == writable.GetType())
+                    return writable;
 
             return null;
         }
         
 
-        /// <summary>
-        /// Turns mapper names from ConfigurationMapper to list of defaultWritables and defaultReadables
-        /// </summary>
-        private static void CreateDefaultMappers()
+
+        public static IReadable GetDefaultReadable(Type defaultMapperType)
         {
-            defaultWritables = new List<IWritable>();
-            defaultReadables = new List<IReadable>();
+            foreach (IReadable readable in DefaultReadables)
+                if (defaultMapperType == readable.GetType())
+                    return readable;
+
+            return null;
+        }
 
 
-            foreach (string mapperName in ConfigurationManager.GetRegisteredMapperNames())
+
+        public static void DisposeDefaultMappers()
+        {
+            foreach (object mapper in DefaultMappers)
             {
-                // sallii käytön myös muista namespacesta
-                Type mapperType = Type.GetType(mapperName);
-
-                // jos mapperia ei löydy niin etsitään sitä omasta namespacesta
-                if (mapperType == null)
-                    mapperType = Type.GetType("JKLog.Mapper." + mapperName);
-
-
-                if (mapperType != null)
-                {
-                    object instance = Activator.CreateInstance(mapperType);
-
-                    IWritable writableInstance = instance as IWritable;
-                    if (writableInstance != null)
-                        defaultWritables.Add(writableInstance);
-                }
+                IDisposable disposable = mapper as IDisposable;
+                if (disposable != null)
+                    disposable.Dispose();
             }
+
+            DefaultMappers = null;
         }
-
-        #endregion
-
-
-
-        public static void ClearMappers()
-        {
-            MapperManager.defaultWritables = null;
-            MapperManager.defaultReadables = null;
-        }
-        
     }
 }

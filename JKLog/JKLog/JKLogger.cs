@@ -154,8 +154,7 @@ namespace JKLog
         /// </summary>
         public static void Dispose()
         {
-            JKLogger.Writer.Dispose();
-            MapperManager.ClearMappers();
+            MapperManager.DisposeDefaultMappers();
             JKLogger.writer = null;
         }
 
