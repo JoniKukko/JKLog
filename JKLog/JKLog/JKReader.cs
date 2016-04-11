@@ -25,7 +25,7 @@ namespace JKLog
 
         public IEnumerator<IEntry> GetEnumerator()
         {
-            return mapper.Entries;
+            return this.mapper.Entries;
         }
 
 
@@ -44,6 +44,7 @@ namespace JKLog
         public void Dispose()
         {
             MapperManager.DisposeMapper(this.mapper);
+            this.mapper = null;
         }
 
         #endregion

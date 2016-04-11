@@ -45,6 +45,8 @@
     <Compile Include="Configuration\KeyValueCollection.cs" />
     <Compile Include="Configuration\MapperCollection.cs" />
     <Compile Include="Configuration\MapperElement.cs" />
+    <Compile Include="Configuration\TypeManager.cs" />
+    <Compile Include="Interface\IConfigurable.cs" />
     <Compile Include="Interface\IEntry.cs" />
     <Compile Include="Interface\IReadable.cs" />
     <Compile Include="Interface\IWritable.cs" />

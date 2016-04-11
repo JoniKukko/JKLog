@@ -130,16 +130,62 @@ namespace JKLog.Util
 
 
 
-        public static void DisposeDefaultMappers()
+        /// <summary>
+        /// Disposes mapper safely if it's not a default mapper.
+        /// </summary>
+        /// <param name="mapper">Mapper to dispose.</param>
+        public static void DisposeMapper(object mapper)
         {
-            foreach (object mapper in DefaultMappers)
+            // käytetään defaultMappers ettei DefaultMappers lataa niitä turhaan
+            // jos mapperia ei löydy defaulteista niin sen voi disposata 
+            if (defaultMappers == null || DefaultMappers.Find(item => item == mapper) == null)
             {
                 IDisposable disposable = mapper as IDisposable;
                 if (disposable != null)
                     disposable.Dispose();
             }
+        }
 
-            DefaultMappers = null;
+
+
+        /// <summary>
+        /// Disposes all mapper's in a list safely if item is not a default mapper.
+        /// </summary>
+        /// <param name="mappers">List of mappers to dispose.</param>
+        public static void DisposeMapper(List<object> mappers)
+        {
+            foreach (object mapper in mappers)
+            {
+                // käytetään defaultMappers ettei DefaultMappers lataa niitä turhaan
+                // jos mapperia ei löydy defaulteista niin sen voi disposata 
+                if (defaultMappers == null || DefaultMappers.Find(item => item == mapper) == null)
+                {
+                    IDisposable disposable = mapper as IDisposable;
+                    if (disposable != null)
+                        disposable.Dispose();
+                }
+            }
+        }
+
+
+
+        /// <summary>
+        /// Disposes default mappers safely
+        /// </summary>
+        public static void DisposeDefaultMappers()
+        {
+            // käytetään defaultMappers ettei DefaultMappers lataa niitä turhaan
+            if (defaultMappers != null)
+            {
+                foreach (object mapper in DefaultMappers)
+                {
+                    IDisposable disposable = mapper as IDisposable;
+                    if (disposable != null)
+                        disposable.Dispose();
+                }
+
+                DefaultMappers = null;
+            }
         }
     }
 }

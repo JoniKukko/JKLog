@@ -19,7 +19,7 @@ namespace JKLog
             get
             {
                 if (JKLogger.writer == null)
-                    JKLogger.writer = new JKWriter(MapperManager.GetDefaultWritables());
+                    JKLogger.writer = new JKWriter(MapperManager.DefaultWritables);
                 
                 return JKLogger.writer;
             }

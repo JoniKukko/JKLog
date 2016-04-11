@@ -101,13 +101,7 @@ namespace JKLog
         /// </summary>
         public void Dispose()
         {
-            foreach (IWritable mapper in this.mappers)
-            {
-                IDisposable disposable = mapper as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
-            }
-
+            MapperManager.DisposeMapper(this.mappers);
             this.mappers = null;
         }
 
