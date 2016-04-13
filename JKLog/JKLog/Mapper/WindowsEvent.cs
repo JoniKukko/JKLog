@@ -44,7 +44,6 @@ namespace JKLog.Mapper
 
         public void WriteEntry(IEntry entry)
         {
-            Console.WriteLine(this.source);
             if (entry.Category != "JKLog" && (entry.Context as Type) != typeof(WindowsEvent))
             {
                 try
