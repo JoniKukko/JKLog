@@ -9,20 +9,28 @@ namespace JKLog.Mapper
     [JKMapper]
     public class JKConsole : IWritable, IConfigurable
     {
-        private Dictionary<string, string> configuration = new Dictionary<string, string>();
+        private Dictionary<string, string> configuration;
         public Dictionary<string, string> Configuration
         {
             set
             {
-                this.configuration = value;
+                if (this.configuration == null)
+                    this.configuration = value;
+            }
+            private get
+            {
+                if (this.configuration == null)
+                    this.configuration = new Dictionary<string, string>();
+                return this.configuration;
             }
         }
+    
         
 
         public void WriteEntry(IEntry entry)
         {
             string conf;
-            if (!this.configuration.TryGetValue("verbose", out conf))
+            if (!this.Configuration.TryGetValue("verbose", out conf))
                 conf = "true";
 
 

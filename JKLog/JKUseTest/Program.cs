@@ -9,20 +9,29 @@ namespace JKUseTest
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            //   AppDomain.CurrentDomain.UnhandledException += JKExceptionHandler.UnhandledException;
-            WindowsEvent events = MapperManager.GetDefaultMapper(typeof(WindowsEvent)) as WindowsEvent;
+            var events = MapperManager.GetDefaultMapper(typeof(WindowsEvent)) as WindowsEvent;
             if (events != null)
                 events.RegisterSource();
 
 
-            UseTests();
+            JKLogger.Debug("TOIMINKO");
         }
+
+        
 
 
         public static void UseTests()
         {
+            WindowsEvent events = MapperManager.GetDefaultMapper(typeof(WindowsEvent)) as WindowsEvent;
+            if (events != null)
+                events.RegisterSource();
+
+            string s = null;
+            s.Trim();
+            
 
 
             Console.WriteLine("*** SIMPLE STATIC TESTS ***");
