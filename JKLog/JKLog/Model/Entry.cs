@@ -29,7 +29,7 @@ namespace JKLog.Model
         /// <param name="caller">This is an automatic [CallerMemberName] parameter.</param>
         /// <param name="filePath">This is an automatic [CallerFilePath] parameter.</param>
         /// <param name="lineNumber">This is an automatic [CallerLineNumber] parameter.</param>
-        public Entry(EntryType type, string message, object context, string category, [CallerMemberName] string caller = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
+        public Entry(EntryType type, string message, object context = null, string category = null, [CallerMemberName] string caller = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
         {
             this.Timestamp = DateTime.Now;
             this.Type = type;
