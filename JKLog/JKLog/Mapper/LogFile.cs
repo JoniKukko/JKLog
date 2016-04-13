@@ -33,19 +33,18 @@ namespace JKLog.Mapper
         {
             get
             {
-                if (this.fullPath == null)
+                if (this.fullPath != null)
                 {
                     string path, filename, extension;
+                    DateTime time = DateTime.Now;
 
                     // jos pathiä ei löydy, mutta formatPath löytyy
-                    if (!this.Configuration.TryGetValue("path", out path) 
-                        || this.Configuration.TryGetValue("formatPath", out path))
-                        path = DateTime.Now.ToString(path);
-                    
+                    if (!this.Configuration.TryGetValue("path", out path) || this.Configuration.TryGetValue("formatPath", out path))
+                        path = time.ToString(path);
+
                     // jos filenameä ei löydy, mutta formatFilename löytyy
-                    if (!this.Configuration.TryGetValue("filename", out filename)
-                        || this.Configuration.TryGetValue("formatFilename", out filename))
-                        filename = DateTime.Now.ToString(filename);
+                    if (!this.Configuration.TryGetValue("filename", out filename) || this.Configuration.TryGetValue("formatFilename", out filename))
+                        filename = time.ToString(filename);
 
                     // haetaan extension
                     this.Configuration.TryGetValue("extension", out extension);
@@ -57,7 +56,7 @@ namespace JKLog.Mapper
 
                     this.fullPath = Path.ChangeExtension(Path.Combine(path, filename), extension);
                 }
-
+                
                 return this.fullPath;
             }
         }
@@ -66,12 +65,9 @@ namespace JKLog.Mapper
 
         public void WriteEntry(IEntry entry)
         {
-            string dir = Path.GetDirectoryName(FullPath);
-
-            if (!string.IsNullOrWhiteSpace(dir))
-                Directory.CreateDirectory(dir);
+            Directory.CreateDirectory( Path.GetDirectoryName(this.FullPath) );
             
-            using (StreamWriter file = new StreamWriter(FullPath, true))
+            using (StreamWriter file = new StreamWriter(this.FullPath, true))
             {
                 file.WriteLine(string.Format(
                 "{0} {1} {2}: {3} {4} in {5}:{6}:{7}",

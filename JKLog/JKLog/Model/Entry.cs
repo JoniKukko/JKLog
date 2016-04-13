@@ -36,7 +36,7 @@ namespace JKLog.Model
             this.Type = type;
             this.Message = message;
             this.Context = context;
-            this.Category = (category == null) ? "None" : category;
+            this.Category = category ?? "None";
             this.Caller = caller;
             this.FilePath = filePath;
             this.LineNumber = lineNumber;

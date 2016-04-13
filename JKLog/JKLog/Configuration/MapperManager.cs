@@ -9,52 +9,44 @@ namespace JKLog.Configuration
 {
     public static class MapperManager
     {
-        private static List<object> defaultMappers = null;
+        private static List<object> defaultMappers;
         public static List<object> DefaultMappers
         {
             get
             {
                 if (defaultMappers == null)
-                {
-                    defaultMappers = new List<object>();
-
-                    foreach (string mapperName in ConfigurationManager.MapperNames)
-                    {
-                        // sallii käytön myös muista namespacesta
-                        Type mapperType = Type.GetType(mapperName);
-
-                        // jos mapperia ei löydy niin etsitään sitä omasta namespacesta
-                        if (mapperType == null)
-                            mapperType = Type.GetType("JKLog.Mapper." + mapperName);
-
-                        // jos mapperi löytyi niin lisätään se defaultteihin.
-                        if (mapperType != null && Attribute.IsDefined(mapperType, typeof(JKMapper)))
-                        {
-                            object mapperInstance = Activator.CreateInstance(mapperType);
-
-                            // jos se on configuroitavissa niin injectoidaan conffit mukaan
-                            if (mapperInstance is IConfigurable)
-                            {
-                                IConfigurable configurable = mapperInstance as IConfigurable;
-                                configurable.Configuration = ConfigurationManager.GetConfiguration(configurable.GetType());
-                            }
-
-                            defaultMappers.Add(mapperInstance);
-                        }
-                    }
-                    
-                    if (defaultMappers.Count == 0)
-                        defaultMappers.Add(new JKConsole());
-
-                }
-
+                    CreateDefaultMappers();
                 return defaultMappers;
             }
+        }
 
-            private set
+
+
+        private static void CreateDefaultMappers()
+        {
+            defaultMappers = new List<object>();
+
+            foreach (string mapperName in ConfigurationManager.MapperNames)
             {
-                defaultMappers = value;
+                // sallii käytön myös muista namespacesta
+                Type mapperType = Type.GetType(mapperName) ?? Type.GetType("JKLog.Mapper." + mapperName);
+
+                // jos mapperi löytyi niin lisätään se defaultteihin.
+                if (mapperType != null && Attribute.IsDefined(mapperType, typeof(JKMapper)))
+                {
+                    object mapperInstance = Activator.CreateInstance(mapperType);
+
+                    // jos se on configuroitavissa niin injectoidaan conffit mukaan
+                    if (mapperInstance is IConfigurable)
+                        (mapperInstance as IConfigurable).Configuration = ConfigurationManager.GetConfiguration(mapperType);
+
+                    defaultMappers.Add(mapperInstance);
+                }
             }
+
+            // lisätään JKConsole jos mitään muuta ei ole..
+            if (defaultMappers.Count == 0)
+                defaultMappers.Add(new JKConsole());
         }
 
 
@@ -76,13 +68,8 @@ namespace JKLog.Configuration
         /// <param name="mapper">Mapper to dispose.</param>
         public static void DisposeMapper(object mapper)
         {
-            // käytetään defaultMappers ettei DefaultMappers lataa niitä turhaan
-            // jos mapperia ei löydy defaulteista niin sen voi disposata 
             if ((defaultMappers == null || DefaultMappers.Find(item => item == mapper) == null) && mapper is IDisposable)
-            {
-                IDisposable disposable = mapper as IDisposable;
-                disposable.Dispose();
-            }
+                (mapper as IDisposable).Dispose();
         }
 
 
@@ -94,15 +81,8 @@ namespace JKLog.Configuration
         public static void DisposeMapper(List<object> mappers)
         {
             foreach (object mapper in mappers)
-            {
-                // käytetään defaultMappers ettei DefaultMappers lataa niitä turhaan
-                // jos mapperia ei löydy defaulteista niin sen voi disposata 
                 if ((defaultMappers == null || DefaultMappers.Find(item => item == mapper) == null) && mapper is IDisposable)
-                {
-                    IDisposable disposable = mapper as IDisposable;
-                    disposable.Dispose();
-                }
-            }
+                    (mapper as IDisposable).Dispose();
         }
 
 
@@ -112,19 +92,13 @@ namespace JKLog.Configuration
         /// </summary>
         public static void DisposeDefaultMappers()
         {
-            // käytetään defaultMappers ettei DefaultMappers lataa niitä turhaan
             if (defaultMappers != null)
             {
                 foreach (object mapper in DefaultMappers)
-                {
                     if (mapper is IDisposable)
-                    {
-                        IDisposable disposable = mapper as IDisposable;
-                        disposable.Dispose();
-                    }
-                }
+                        (mapper as IDisposable).Dispose();
 
-                DefaultMappers = null;
+                defaultMappers = null;
             }
         }
     }

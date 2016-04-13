@@ -101,8 +101,21 @@ namespace JKLog
         /// </summary>
         public void Dispose()
         {
-            MapperManager.DisposeMapper(this.mappers);
-            this.mappers = null;
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (this.mappers != null)
+                {
+                    MapperManager.DisposeMapper(this.mappers);
+                    this.mappers = null;
+                }
+            }
         }
 
         #endregion

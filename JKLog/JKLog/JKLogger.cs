@@ -22,17 +22,12 @@ namespace JKLog
             {
                 if (writer == null)
                 {
-                    List<IWritable> defaultWritables = new List<IWritable>();  
+                    writer = new JKWriter();
                     foreach (object defaultMapper in MapperManager.DefaultMappers)
                     {
                         if (defaultMapper is IWritable)
-                        {
-                            IWritable writable = defaultMapper as IWritable;
-                            defaultWritables.Add(writable);
-                        }
+                            writer.Attach(defaultMapper as IWritable);
                     }
-
-                    writer = new JKWriter(defaultWritables);
                 }
                 
                 return writer;
@@ -168,8 +163,11 @@ namespace JKLog
         /// </summary>
         public static void Dispose()
         {
-            MapperManager.DisposeDefaultMappers();
-            JKLogger.writer = null;
+            if (JKLogger.writer != null)
+            {
+                MapperManager.DisposeDefaultMappers();
+                JKLogger.writer = null;
+            }
         }
 
         #endregion
