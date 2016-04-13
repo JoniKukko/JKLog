@@ -6,12 +6,12 @@ namespace JKLog.Configuration
 {
     internal class MapperElement : ConfigurationElement
     {
-        [ConfigurationProperty("name", IsRequired = true)]
+        [ConfigurationProperty("type", IsRequired = true)]
         public string Name
         {
             get
             {
-                return (string)base["name"];
+                return (string)base["type"];
             }
         }
 

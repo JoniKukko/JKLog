@@ -19,6 +19,18 @@ namespace JKUseTest
 
             UseTests();
 
+            Managed mapper = MapperManager.GetDefaultMapper(typeof(Managed)) as Managed;
+            if (mapper != null)
+            {
+                using (JKReader reader = new JKReader(mapper))
+                {
+                    foreach(IEntry entry in reader)
+                    {
+                        Console.WriteLine(entry.Message);
+                    }
+                }
+            }
+
         }
 
 
