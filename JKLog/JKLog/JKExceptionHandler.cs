@@ -7,6 +7,9 @@ namespace JKLog
 {
     public static class JKExceptionHandler
     {
+        /// <summary>
+        /// Gets the Thread exception handler.
+        /// </summary>
         public static ThreadExceptionEventHandler ThreadException
         {
             get
@@ -15,8 +18,10 @@ namespace JKLog
             }
         }
 
-
-
+        
+        /// <summary>
+        /// Gets the Unhandled exception handler.
+        /// </summary>
         public static UnhandledExceptionEventHandler UnhandledException
         {
             get
@@ -26,9 +31,10 @@ namespace JKLog
         }
 
 
-
+        
         private static void ThreadExceptionHandler(object sender, ThreadExceptionEventArgs args)
         {
+            // jos castaus onnistuu niin raportoidaan virhe loggerille
             Exception ex = args.Exception as Exception;
             if (ex != null)
                 JKLogger.Error(ex.Message, null, ex.GetType().Name);
@@ -38,6 +44,7 @@ namespace JKLog
 
         private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
+            // jos castaus onnistuu niin raportoidaan virhe loggerille
             Exception ex = args.ExceptionObject as Exception;
             if (ex != null)
                 JKLogger.Error(ex.Message, null, ex.GetType().Name);

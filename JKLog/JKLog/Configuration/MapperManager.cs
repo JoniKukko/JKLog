@@ -22,10 +22,14 @@ namespace JKLog.Configuration
 
 
 
+        /// <summary>
+        /// Creates new objects based on the mappers defined in App.config.
+        /// </summary>
         private static void CreateDefaultMappers()
         {
             defaultMappers = new List<object>();
 
+            // käydään app.configin mapperit läpi.
             foreach (string mapperName in ConfigurationManager.MapperNames)
             {
                 // sallii käytön myös muista namespacesta
@@ -51,6 +55,11 @@ namespace JKLog.Configuration
 
 
 
+        /// <summary>
+        /// Fetches default mapper instance by mapper type.
+        /// </summary>
+        /// <param name="defaultMapperType">Type of the default mapper.</param>
+        /// <returns>Mapper instance</returns>
         public static object GetDefaultMapper(Type defaultMapperType)
         {
             foreach (object defaultMapper in DefaultMappers)

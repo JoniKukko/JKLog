@@ -14,6 +14,7 @@ namespace JKLog.Mapper
         {
             set
             {
+                // set can be done only once
                 if (this.configuration == null)
                     this.configuration = value;
             }
@@ -27,13 +28,18 @@ namespace JKLog.Mapper
     
         
 
+        /// <summary>
+        /// Writes entry to console
+        /// </summary>
+        /// <param name="entry">Entry to write.</param>
         public void WriteEntry(IEntry entry)
         {
+            // Haetaan app.configista verbose asetus, default on true.
             string conf;
             if (!this.Configuration.TryGetValue("verbose", out conf))
                 conf = "true";
 
-
+            // päätetään kuinka paljon puhutaan.
             if (conf != "false")
                 Console.WriteLine(string.Format(
                     "{0} {1} {2}: {3} {4} in {5}:{6}:{7}",

@@ -15,6 +15,7 @@ namespace JKLog.Mapper
         {
             set
             {
+                // set can be done only once
                 if (this.configuration == null)
                     this.configuration = value;
             }
@@ -28,6 +29,9 @@ namespace JKLog.Mapper
         
 
 
+        /// <summary>
+        /// Creates fullpath with values from App.config
+        /// </summary>
         private string fullPath;
         private string FullPath
         {
@@ -63,6 +67,10 @@ namespace JKLog.Mapper
 
 
 
+        /// <summary>
+        /// Write entry to log file.
+        /// </summary>
+        /// <param name="entry">Entry to write.</param>
         public void WriteEntry(IEntry entry)
         {
             Directory.CreateDirectory( Path.GetDirectoryName(this.FullPath) );

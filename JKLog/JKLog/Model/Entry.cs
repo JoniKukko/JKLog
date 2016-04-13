@@ -18,8 +18,7 @@ namespace JKLog.Model
         public int LineNumber { get; set; }
 
 
-
-
+        
         /// <summary>
         /// Creates a new Entry with every value possible.
         /// </summary>

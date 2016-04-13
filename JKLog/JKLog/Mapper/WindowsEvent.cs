@@ -16,6 +16,7 @@ namespace JKLog.Mapper
         {
             set
             {
+                // set can be done only once
                 if (this.configuration == null)
                     this.configuration = value;
             }
@@ -33,15 +34,19 @@ namespace JKLog.Mapper
         {
             get
             {
+                // Yritetään hakea App.configista sourcea, oletus on JKLog.
                 if (this.source == null && !this.Configuration.TryGetValue("source", out this.source))
                         this.source = "JKLog";
-
                 return this.source;
             }
         }
 
 
 
+        /// <summary>
+        /// Write entry to Windows EventLog
+        /// </summary>
+        /// <param name="entry">Entry to write</param>
         public void WriteEntry(IEntry entry)
         {
             if (entry.Category != "JKLog" && (entry.Context as Type) != typeof(WindowsEvent))
@@ -70,10 +75,15 @@ namespace JKLog.Mapper
 
 
 
+        /// <summary>
+        /// Register Windows EventLog source.
+        /// <para>You can call this at anytime, does nothing if source is already registered.</para>
+        /// </summary>
         public void RegisterSource()
         {
             try
             {
+                // If source does not exists.
                 if (!EventLog.SourceExists(this.Source))
                 {
                     EventLog.CreateEventSource(this.Source, this.Source);

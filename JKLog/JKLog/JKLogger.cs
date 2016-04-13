@@ -1,8 +1,6 @@
 ﻿using JKLog.Configuration;
 using JKLog.Interface;
-using JKLog.Mapper;
 using JKLog.Model;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 
@@ -22,6 +20,7 @@ namespace JKLog
             {
                 if (writer == null)
                 {
+                    // Haetaan MapperManagerilta defaultit ja lisätään ne uuteen writeriin
                     writer = new JKWriter();
                     foreach (object defaultMapper in MapperManager.DefaultMappers)
                     {
