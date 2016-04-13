@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace JKLog.Mapper
 {
     [JKMapper]
-    class LogFile : IWritable, IConfigurable
+    public class LogFile : IWritable, IConfigurable
     {
         private Dictionary<string, string> configuration;
         public Dictionary<string, string> Configuration
@@ -33,17 +33,17 @@ namespace JKLog.Mapper
         {
             get
             {
-                if (this.fullPath != null)
+                if (this.fullPath == null)
                 {
                     string path, filename, extension;
                     DateTime time = DateTime.Now;
 
                     // jos pathiä ei löydy, mutta formatPath löytyy
-                    if (!this.Configuration.TryGetValue("path", out path) || this.Configuration.TryGetValue("formatPath", out path))
+                    if (!this.Configuration.TryGetValue("path", out path) && this.Configuration.TryGetValue("formatPath", out path))
                         path = time.ToString(path);
 
                     // jos filenameä ei löydy, mutta formatFilename löytyy
-                    if (!this.Configuration.TryGetValue("filename", out filename) || this.Configuration.TryGetValue("formatFilename", out filename))
+                    if (!this.Configuration.TryGetValue("filename", out filename) && this.Configuration.TryGetValue("formatFilename", out filename))
                         filename = time.ToString(filename);
 
                     // haetaan extension

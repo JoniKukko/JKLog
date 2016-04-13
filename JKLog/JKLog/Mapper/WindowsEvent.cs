@@ -11,7 +11,7 @@ namespace JKLog.Mapper
     [JKMapper]
     public class WindowsEvent : IWritable, IConfigurable
     {
-        private Dictionary<string, string> configuration = new Dictionary<string, string>();
+        private Dictionary<string, string> configuration;
         public Dictionary<string, string> Configuration
         {
             set
@@ -21,6 +21,8 @@ namespace JKLog.Mapper
             }
             private get
             {
+                if (this.configuration == null)
+                    this.configuration = new Dictionary<string, string>();
                 return this.configuration;
             }
         }
@@ -31,16 +33,18 @@ namespace JKLog.Mapper
         {
             get
             {
-                if (this.source == null)
-                    if (!this.Configuration.TryGetValue("source", out this.source))
+                if (this.source == null && !this.Configuration.TryGetValue("source", out this.source))
                         this.source = "JKLog";
 
                 return this.source;
             }
         }
 
+
+
         public void WriteEntry(IEntry entry)
         {
+            Console.WriteLine(this.source);
             if (entry.Category != "JKLog" && (entry.Context as Type) != typeof(WindowsEvent))
             {
                 try
@@ -55,6 +59,7 @@ namespace JKLog.Mapper
                     if (entry.Context != null)
                         toBytes = Encoding.ASCII.GetBytes(entry.Context.ToString());
 
+                    // write to eventlog
                     EventLog.WriteEntry(this.Source, entry.Message, type, (int)entry.Type, (short)entry.Type, toBytes);
                 }
                 catch (Exception)
