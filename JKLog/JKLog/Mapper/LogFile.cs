@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace JKLog.Mapper
 {
+    [JKMapper]
     class LogFile : IWritable, IConfigurable
     {
         private Dictionary<string, string> configuration;

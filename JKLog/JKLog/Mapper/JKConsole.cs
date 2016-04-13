@@ -1,10 +1,12 @@
-﻿using JKLog.Configuration;
-using JKLog.Interface;
+﻿using JKLog.Interface;
 using System;
 using System.Collections.Generic;
 
+
+
 namespace JKLog.Mapper
 {
+    [JKMapper]
     public class JKConsole : IWritable, IConfigurable
     {
         private Dictionary<string, string> configuration = new Dictionary<string, string>();

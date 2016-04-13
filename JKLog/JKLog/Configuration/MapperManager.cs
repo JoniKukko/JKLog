@@ -28,7 +28,7 @@ namespace JKLog.Configuration
                             mapperType = Type.GetType("JKLog.Mapper." + mapperName);
 
                         // jos mapperi löytyi niin lisätään se defaultteihin.
-                        if (mapperType != null)
+                        if (mapperType != null && Attribute.IsDefined(mapperType, typeof(JKMapper)))
                         {
                             object mapperInstance = Activator.CreateInstance(mapperType);
 
@@ -42,6 +42,10 @@ namespace JKLog.Configuration
                             defaultMappers.Add(mapperInstance);
                         }
                     }
+                    
+                    if (defaultMappers.Count == 0)
+                        defaultMappers.Add(new JKConsole());
+
                 }
 
                 return defaultMappers;

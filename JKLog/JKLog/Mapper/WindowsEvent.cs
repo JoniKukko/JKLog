@@ -1,16 +1,17 @@
 ﻿using System;
 using JKLog.Interface;
 using System.Diagnostics;
-using JKLog.Configuration;
 using System.Text;
-using JKLog.Model;
 using System.Collections.Generic;
+
+
 
 namespace JKLog.Mapper
 {
+    [JKMapper]
     public class WindowsEvent : IWritable, IConfigurable
     {
-        private Dictionary<string, string> configuration;
+        private Dictionary<string, string> configuration = new Dictionary<string, string>();
         public Dictionary<string, string> Configuration
         {
             set
@@ -20,8 +21,6 @@ namespace JKLog.Mapper
             }
             private get
             {
-                if (this.configuration == null)
-                    this.configuration = new Dictionary<string, string>();
                 return this.configuration;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using JKLog.Configuration;
 using JKLog.Interface;
+using JKLog.Mapper;
 using JKLog.Model;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;

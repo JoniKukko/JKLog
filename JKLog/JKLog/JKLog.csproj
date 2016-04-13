@@ -59,6 +59,7 @@
     <Compile Include="Mapper\WindowsEvent.cs" />
     <Compile Include="Model\Entry.cs" />
     <Compile Include="Model\EntryType.cs" />
+    <Compile Include="Interface\JKMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\MapperManager.cs" />
   </ItemGroup>

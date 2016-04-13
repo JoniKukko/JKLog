@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace JKLog.Mapper
 {
+    [JKMapper]
     public class Managed : IWritable, IReadable
     {
         private List<IEntry> entries = new List<IEntry>();
