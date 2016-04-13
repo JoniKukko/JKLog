@@ -33,9 +33,11 @@ namespace JKLog.Configuration
                             object mapperInstance = Activator.CreateInstance(mapperType);
 
                             // jos se on configuroitavissa niin injectoidaan conffit mukaan
-                            IConfigurable configurable = mapperInstance as IConfigurable;
-                            if (configurable != null)
+                            if (mapperInstance is IConfigurable)
+                            {
+                                IConfigurable configurable = mapperInstance as IConfigurable;
                                 configurable.Configuration = ConfigurationManager.GetConfiguration(configurable.GetType());
+                            }
 
                             defaultMappers.Add(mapperInstance);
                         }
@@ -72,11 +74,10 @@ namespace JKLog.Configuration
         {
             // käytetään defaultMappers ettei DefaultMappers lataa niitä turhaan
             // jos mapperia ei löydy defaulteista niin sen voi disposata 
-            if (defaultMappers == null || DefaultMappers.Find(item => item == mapper) == null)
+            if ((defaultMappers == null || DefaultMappers.Find(item => item == mapper) == null) && mapper is IDisposable)
             {
                 IDisposable disposable = mapper as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
+                disposable.Dispose();
             }
         }
 
@@ -92,11 +93,10 @@ namespace JKLog.Configuration
             {
                 // käytetään defaultMappers ettei DefaultMappers lataa niitä turhaan
                 // jos mapperia ei löydy defaulteista niin sen voi disposata 
-                if (defaultMappers == null || DefaultMappers.Find(item => item == mapper) == null)
+                if ((defaultMappers == null || DefaultMappers.Find(item => item == mapper) == null) && mapper is IDisposable)
                 {
                     IDisposable disposable = mapper as IDisposable;
-                    if (disposable != null)
-                        disposable.Dispose();
+                    disposable.Dispose();
                 }
             }
         }
@@ -113,9 +113,11 @@ namespace JKLog.Configuration
             {
                 foreach (object mapper in DefaultMappers)
                 {
-                    IDisposable disposable = mapper as IDisposable;
-                    if (disposable != null)
+                    if (mapper is IDisposable)
+                    {
+                        IDisposable disposable = mapper as IDisposable;
                         disposable.Dispose();
+                    }
                 }
 
                 DefaultMappers = null;

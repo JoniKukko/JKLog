@@ -24,9 +24,11 @@ namespace JKLog
                     List<IWritable> defaultWritables = new List<IWritable>();  
                     foreach (object defaultMapper in MapperManager.DefaultMappers)
                     {
-                        IWritable writable = defaultMapper as IWritable;
-                        if (writable != null)
+                        if (defaultMapper is IWritable)
+                        {
+                            IWritable writable = defaultMapper as IWritable;
                             defaultWritables.Add(writable);
+                        }
                     }
 
                     writer = new JKWriter(defaultWritables);
