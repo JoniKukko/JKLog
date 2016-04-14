@@ -4,6 +4,7 @@ using JKLog.Interface;
 using JKLog.Mapper;
 using JKLog.Model;
 using System;
+using System.Collections.Generic;
 
 namespace JKUseTest
 {
@@ -13,6 +14,7 @@ namespace JKUseTest
         static void Main(string[] args)
         {
             // BasicExample();
+            // OwnMapper();
             // ReadFromDefault();
             // ReadFromLocal();
             // UnhandledExceptions();
@@ -32,10 +34,20 @@ namespace JKUseTest
 
 
 
+        public static void OwnMapper()
+        {
+            // lisätään uusi mapperi
+            MapperManager.DefaultMappers.Add(new OmaMapper());
+
+            JKLogger.Information("Terve 2!");
+        }
+
+
+
         public static void ReadFromDefault()
         {
             // Uusi information tyyppinen tietue
-            JKLogger.Information("Terve 2!");
+            JKLogger.Information("Terve 3!");
 
             // haetaan default mapperin instanssi
             IReadable readable = MapperManager.GetDefaultMapper(typeof(Managed)) as IReadable;
@@ -60,7 +72,7 @@ namespace JKUseTest
             // alustukset
             Managed mapper = new Managed();
             JKWriter writer = new JKWriter(mapper);
-            Entry entry = new Entry(EntryType.Information, "Terve 3!");
+            Entry entry = new Entry(EntryType.Information, "Terve 4!");
 
             // kirjoitetaan tietue
             writer.WriteEntry(entry);

@@ -18,6 +18,10 @@ namespace JKLog.Configuration
                     CreateDefaultMappers();
                 return defaultMappers;
             }
+            set
+            {
+                defaultMappers = value;
+            }
         }
 
 
